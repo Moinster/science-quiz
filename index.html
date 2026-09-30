@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#13203A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Energy Science Cards</title>
+<style>
+:root{
+  --ink:#13203A;
+  --ink-soft:#4B5873;
+  --paper:#EEF3F1;
+  --card:#FFFFFF;
+  --volt:#0E7C86;
+  --volt-pale:#D6EFF1;
+  --spark:#F5B400;
+  --spark-pale:#FDF0CC;
+  --grass:#1F8A4C;
+  --grass-pale:#DAF1E2;
+  --brick:#B7332A;
+  --brick-pale:#FADEDB;
+  --line:#C9D6D8;
+  --font: ui-rounded, "SF Pro Rounded", "Hiragino Maru Gothic ProN", "Varela Round", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);color:var(--ink);font-family:var(--font);
+  font-size:17px;line-height:1.5;
+  padding:0 16px calc(28px + env(safe-area-inset-bottom));
+  display:flex;justify-content:center;
+}
+.wrap{width:100%;max-width:520px}
+h1{font-size:34px;line-height:1.05;letter-spacing:-0.5px;margin:0 0 6px}
+h3{font-size:15px;margin:26px 0 10px;color:var(--ink-soft);font-weight:600}
+.lede{color:var(--ink-soft);margin:0 0 22px;font-size:16px}
+button{font-family:inherit;font-size:17px;cursor:pointer;border:none;background:none;color:inherit}
+.btn{
+  display:block;width:100%;min-height:54px;border-radius:14px;
+  background:var(--volt);color:#fff;font-weight:600;padding:14px 18px;margin-top:12px;
+  transition:transform .12s ease;
+}
+.btn:active{transform:scale(.985)}
+.btn.ghost{background:var(--card);color:var(--ink);border:2px solid var(--line);font-weight:600}
+.btn:focus-visible,.opt:focus-visible,.home:focus-visible,.topics button:focus-visible{outline:3px solid var(--spark);outline-offset:2px}
+.modes .btn{text-align:left;display:flex;flex-direction:column;gap:2px;align-items:flex-start}
+.modes small{font-weight:400;font-size:14px;color:var(--ink-soft)}
+.modes .btn:not(.ghost) small{color:#CBEDEF}
+
+.hero{padding:30px 0 4px}
+.crest{display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:#fff;font-size:13px;font-weight:600;
+  letter-spacing:.4px;padding:6px 12px;border-radius:999px;margin-bottom:16px}
+.crest svg{width:14px;height:14px}
+.ladder{list-style:none;margin:24px 0 0;padding:0;border-left:3px solid var(--line)}
+.ladder li{position:relative;padding:8px 0 8px 20px;font-size:15px;color:var(--ink-soft)}
+.ladder li::before{content:"";position:absolute;left:-8px;top:15px;width:13px;height:13px;
+  border-radius:50%;background:var(--line)}
+.ladder li:last-child{color:var(--ink);font-weight:600}
+.ladder li:last-child::before{background:var(--spark);box-shadow:0 0 0 4px var(--spark-pale)}
+.ladder .pct{font-size:13px;font-weight:400;color:var(--ink-soft)}
+.best{margin-top:-8px;margin-bottom:18px;font-size:15px;color:var(--ink-soft)}
+.topics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.topics button{background:var(--card);border:2px solid var(--line);border-radius:14px;
+  padding:13px 14px;text-align:left;font-size:15px;font-weight:600;line-height:1.25;min-height:64px}
+.topics button.wide{grid-column:1 / -1;border-color:var(--spark);background:var(--spark-pale)}
+.topics span{display:block;font-weight:400;font-size:13px;color:var(--ink-soft);margin-top:3px}
+
+.words{display:grid;gap:8px}
+.word{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px 14px;font-size:15px;line-height:1.4}
+.word b{color:var(--volt)}
+
+.topbar{position:sticky;top:0;background:var(--paper);padding:12px 0 12px;z-index:5}
+.barrow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.home{flex:none;width:42px;height:42px;border-radius:12px;background:var(--card);
+  border:2px solid var(--line);display:flex;align-items:center;justify-content:center}
+.home svg{width:19px;height:19px;display:block}
+/* the progress bar is a battery that charges up */
+.battery{flex:1;display:flex;align-items:center}
+.cell{flex:1;height:22px;border:3px solid var(--ink);border-radius:7px;padding:2px;background:var(--card)}
+.cell i{display:block;height:100%;border-radius:3px;background:var(--grass);width:0;transition:width .35s ease}
+.cap{width:5px;height:10px;background:var(--ink);border-radius:0 3px 3px 0}
+.status{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--ink-soft)}
+.status b{color:var(--ink);font-weight:600}
+.streak{display:inline-flex;align-items:center;gap:4px;background:var(--spark-pale);color:#6B4D00;
+  font-weight:600;font-size:13px;padding:3px 10px;border-radius:999px}
+.streak svg{width:12px;height:12px}
+.streak.hot{background:var(--spark);color:var(--ink)}
+.leaving{background:var(--spark-pale);border-radius:14px;padding:12px 14px;margin-bottom:10px;
+  display:flex;align-items:center;gap:10px;font-size:15px;color:#6B4D00}
+.leaving button{font-weight:600;font-size:15px;padding:8px 12px;border-radius:10px;background:var(--card)}
+
+.card{background:var(--card);border-radius:20px;padding:22px 20px;border:1px solid var(--line);position:relative}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.topic{background:var(--volt-pale);color:var(--volt);font-size:13px;font-weight:600;
+  padding:5px 11px;border-radius:999px}
+.again{background:var(--spark-pale);color:#6B4D00;font-size:13px;font-weight:600;
+  padding:5px 11px;border-radius:999px}
+.ask{font-size:21px;line-height:1.3;font-weight:600;margin:0 0 18px}
+.stem{font-size:16px;color:var(--ink-soft);margin:0 0 10px}
+.claim{font-size:22px;line-height:1.25;font-weight:600;margin:0 0 20px;padding:16px 18px;
+  background:var(--paper);border-radius:14px;border-left:5px solid var(--volt)}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;min-height:56px;
+  padding:14px 16px;margin-bottom:10px;background:var(--card);border:2px solid var(--line);
+  border-radius:14px;font-size:17px;line-height:1.35;transition:transform .12s ease}
+.opt:active{transform:scale(.99)}
+.opt .dot{flex:none;width:26px;height:26px;border-radius:50%;background:var(--paper);
+  color:var(--ink-soft);font-size:14px;font-weight:600;display:flex;align-items:center;
+  justify-content:center;margin-top:-1px}
+.tf{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tf .opt{justify-content:center;font-size:19px;font-weight:600;min-height:66px;margin:0}
+.tf .opt .dot{display:none}
+.opt.right{border-color:var(--grass);background:var(--grass-pale)}
+.opt.right .dot{background:var(--grass);color:#fff}
+.opt.wrong{border-color:var(--brick);background:var(--brick-pale)}
+.opt.wrong .dot{background:var(--brick);color:#fff}
+.opt.dim{opacity:.45}
+.locked .opt{cursor:default}
+.note{margin:16px 0 0;padding:14px 16px;border-radius:14px;font-size:15px;line-height:1.5}
+.note.good{background:var(--grass-pale);color:#11502B}
+.note.bad{background:var(--spark-pale);color:#6B4D00}
+.note b{font-weight:600}
+.power{display:block;margin-top:6px;font-weight:600;color:var(--ink)}
+
+/* little sparks that burst from the right answer */
+.zap{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--spark);
+  pointer-events:none;animation:zap .6s ease-out forwards}
+@keyframes zap{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+.pop{animation:pop .35s ease}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.03)}100%{transform:scale(1)}}
+
+.badge{background:var(--ink);color:#fff;border-radius:20px;padding:26px 22px;text-align:center}
+.badge .ring{width:96px;height:96px;margin:0 auto;border-radius:50%;border:5px solid var(--spark);
+  display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:600}
+.badge .rank{font-size:26px;font-weight:600;line-height:1.15;margin:12px 0 6px}
+.badge .tally{font-size:15px;color:#B6C3D8;margin:0}
+.badge .quip{margin:14px 0 0;font-size:16px;color:#DCE4F0}
+.miss{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--spark);
+  border-radius:0 14px 14px 0;padding:14px 16px;margin-bottom:10px}
+.miss p{margin:0}
+.miss .mq{font-weight:600;font-size:16px}
+.miss .ma{font-size:15px;color:var(--grass);margin-top:5px}
+.miss .mn{font-size:14px;color:var(--ink-soft);margin-top:5px}
+footer{margin-top:26px;font-size:13px;color:var(--ink-soft);text-align:center}
+@media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* q = question wording, s = sentence stem for the other formats,
+   o = options (o[a] is correct), n = the explanation.
+   Every option has to finish the stem s, because the true/false form shows s + one option. */
+const QUESTIONS = [
+ {t:"Energy", q:"What is energy?", s:"Energy is…",
+  o:["The ability to make something happen or do an action","A pretend version of something bigger","How fast something moves"], a:0,
+  n:"No energy, no action. Energy is what makes things happen."},
+ {t:"Energy", q:"What gives a wind turbine the energy to spin?", s:"A wind turbine gets the energy to spin from…",
+  o:["The moving wind","The shadow of the tower","The color of the blades"], a:0,
+  n:"Moving air has energy. It pushes the blades around."},
+ {t:"Energy", q:"Which of these is using energy to make something happen?", s:"Something using energy to make something happen is…",
+  o:["A rock sitting still on the ground","A wind turbine spinning in the breeze","A closed book on a shelf"], a:1,
+  n:"The wind's energy makes the blades spin. Something is happening!"},
+ {t:"Energy", q:"You kick a ball that was sitting still. What did your kick give the ball?", s:"When you kick a ball that was sitting still, your kick gives it…",
+  o:["A new color","More weight","Energy to move"], a:2,
+  n:"Your kick gave it energy, and the energy made it roll."},
+ {t:"Energy", q:"Where does your body get the energy to run at recess?", s:"Your body gets the energy to run from…",
+  o:["The shoes you wear","The food you eat","The sound of the bell"], a:1,
+  n:"Food has energy stored inside it. Your body uses that energy to move."},
+ {t:"Energy", q:"What does something need to START moving?", s:"To start moving, something needs…",
+  o:["Energy","A picture of itself","To be very small"], a:0,
+  n:"Moving is an action, and every action needs energy."},
+
+ {t:"Stored energy", q:"What is stored energy?", s:"Stored energy is…",
+  o:["Energy that is moving very fast","Energy saved inside something that is not being used yet","Energy that is all used up"], a:1,
+  n:"Stored means saved. It is waiting inside, ready to be used."},
+ {t:"Stored energy", q:"Which of these has stored energy?", s:"Something that has stored energy is…",
+  o:["A loose rubber band that is not stretched","A dead battery","A stretched rubber band"], a:2,
+  n:"Stretching puts energy in. A loose band or a dead battery has none to give."},
+ {t:"Stored energy", q:"A new battery is sitting in a drawer. What kind of energy does it have?", s:"A new battery sitting in a drawer has…",
+  o:["Stored energy","No energy at all","Lots of speed"], a:0,
+  n:"The energy is saved inside. Put it in a flashlight to use it."},
+ {t:"Stored energy", q:"You stretch a rubber band and let it go. What happens to its stored energy?", s:"When you let go of a stretched rubber band, its stored energy…",
+  o:["Stays stuck inside forever","Turns into motion","Turns the band into a model"], a:1,
+  n:"The saved energy gets used, and the band snaps and flies."},
+ {t:"Stored energy", q:"How can you give a rubber band MORE stored energy?", s:"To give a rubber band more stored energy, you…",
+  o:["Stretch it farther","Paint it a new color","Leave it loose on the table"], a:0,
+  n:"More stretch means more stored energy, and a bigger launch."},
+ {t:"Stored energy", q:"Why does a flashlight stop working when its batteries die?", s:"A flashlight stops working when its batteries die because…",
+  o:["The flashlight got smaller","The light moved too fast","The stored energy is used up"], a:2,
+  n:"No energy left means nothing can happen."},
+ {t:"Stored energy", q:"You wind up a toy car but hold it still. Where is the energy?", s:"When you wind up a toy car and hold it still, the energy is…",
+  o:["Stored inside the wound-up spring","All used up already","Gone into your hand"], a:0,
+  n:"Winding saves energy in the spring. Let go and it turns into motion."},
+
+ {t:"Motion", q:"What is motion?", s:"Motion is…",
+  o:["Energy that is saved for later","A change in an object's position","A smaller version of something"], a:1,
+  n:"If its position changed, it was in motion."},
+ {t:"Motion", q:"Which of these is in motion?", s:"Something that is in motion is…",
+  o:["A parked car with the engine off","A chair nobody is touching","A hot air balloon rising into the sky"], a:2,
+  n:"The balloon's position keeps changing as it goes up."},
+ {t:"Motion", q:"A hot air balloon goes from the ground to high in the sky. How do you know it was in motion?", s:"You know the balloon was in motion because…",
+  o:["Its position changed","It has stripes","It is shaped like a ball"], a:0,
+  n:"Motion just means the position changed. Ground to sky is a big change!"},
+ {t:"Motion", q:"A ball sits in the same spot all day. Is it in motion?", s:"A ball that sits in the same spot all day is…",
+  o:["In motion, because it is round","Not in motion, because its position never changed","In motion, because it has energy stored"], a:1,
+  n:"Same spot all day means no change in position, so no motion."},
+ {t:"Motion", q:"Motion tells you something moved. Which word tells you HOW FAST it moved?", s:"The science word that tells you how fast something moved is…",
+  o:["Speed","Model","Fair test"], a:0,
+  n:"Motion: it moved. Speed: how fast it moved."},
+
+ {t:"Speed", q:"What is speed?", s:"Speed is…",
+  o:["How big something is","How heavy something is","How fast something moves"], a:2,
+  n:"Speed is all about how FAST."},
+ {t:"Speed", q:"A race car and a bicycle go around the same track. The race car finishes first. Which one had more speed?", s:"On the same track, the one that finished first had more speed. That was…",
+  o:["The race car","The bicycle","Neither, they had the same speed"], a:0,
+  n:"Same track, less time. That means more speed."},
+ {t:"Speed", q:"Maya runs a race in 10 seconds. Leo runs the same race in 15 seconds. Who was faster?", s:"Maya took 10 seconds and Leo took 15 seconds on the same race, so the faster runner was…",
+  o:["Leo","Maya","Neither, they tied"], a:1,
+  n:"Same distance, fewer seconds, more speed."},
+ {t:"Speed", q:"Which has more energy: a car going fast, or the same car going slow?", s:"Between the same car going fast or slow, the one with more energy is…",
+  o:["The car going fast","The car going slow","Neither, they have the same energy"], a:0,
+  n:"The faster something moves, the more energy it has. That's why a fast ball hits harder."},
+ {t:"Speed", q:"You give a toy car a bigger push. What will happen to its speed?", s:"If you give a toy car a bigger push, it will…",
+  o:["Go slower","Go faster","Not move at all"], a:1,
+  n:"A bigger push gives it more energy, and more energy means more speed."},
+
+ {t:"Fair test", q:"What is a fair test?", s:"A fair test is an experiment where you…",
+  o:["Change everything at once","Don't change anything at all","Change only one thing at a time"], a:2,
+  n:"Only change one component (one thing) at a time. Keep everything else the same."},
+ {t:"Fair test", q:"You want to know if a bigger push makes a toy car go farther. What should you change?", s:"To test if a bigger push makes a toy car go farther, you should change…",
+  o:["Only how hard you push","The push, the car, and the floor","Nothing at all"], a:0,
+  n:"Change just the push. Keep the same car and the same floor."},
+ {t:"Fair test", q:"Sam races a big car down a tall ramp and a tiny car down a short ramp. Why is this NOT a fair test?", s:"Sam's ramp race is not a fair test because…",
+  o:["He used ramps","He changed more than one thing","He used toy cars"], a:1,
+  n:"He changed the car AND the ramp. Now he can't tell which one made the difference."},
+ {t:"Fair test", q:"You test how far you stretch the rubber band on a rubber band car. What should stay the SAME each time?", s:"When you test how far to stretch the rubber band, you should keep the same…",
+  o:["Stretch every time","Nothing, so change it all","Car, floor, and rubber band"], a:2,
+  n:"The stretch is the one thing you change. Everything else stays the same."},
+ {t:"Fair test", q:"Why do scientists change only one thing at a time?", s:"Scientists change only one thing at a time so they…",
+  o:["Know what caused the result","Can finish faster","Can use less paper"], a:0,
+  n:"If only one thing changed, that one thing is the reason for the result."},
+ {t:"Fair test", q:"You want to know which ball rolls fastest down a ramp. How do you make it a fair test?", s:"To fairly test which ball rolls fastest down a ramp, you…",
+  o:["Push one ball and just let the other one roll","Use the same ramp and let go from the same spot","Use a steep ramp for one ball and a flat ramp for the other"], a:1,
+  n:"The ball is the only thing that changes. Same ramp, same starting spot."},
+
+ {t:"Models", q:"What is a model?", s:"A model is…",
+  o:["A pretend, smaller version of something bigger","The fastest thing in the room","Energy saved inside something"], a:0,
+  n:"A model is a pretend version, usually smaller than the real thing."},
+ {t:"Models", q:"Which of these is a model?", s:"An example of a model is…",
+  o:["A real train carrying people","A toy train set","A real train station"], a:1,
+  n:"A toy train is a small, pretend version of a real train."},
+ {t:"Models", q:"Why do scientists use models?", s:"Scientists use models because…",
+  o:["Models are always bigger than the real thing","Models never move","The real thing is often too big to test"], a:2,
+  n:"You can't test a real roller coaster on your desk, but you can test a model of one."},
+ {t:"Models", q:"Your class tests a small paper wind turbine by blowing a fan on it. What is the paper turbine?", s:"A small paper wind turbine that you test with a fan is…",
+  o:["A model of a real wind turbine","A real power plant","A fair test"], a:0,
+  n:"It is a small, pretend version of the giant real turbine."},
+ {t:"Models", q:"A toy car rolling down a ramp could be a model of what?", s:"A toy car rolling down a ramp could be a model of…",
+  o:["A battery","A real car going down a hill","A hot air balloon"], a:1,
+  n:"The ramp is a small hill, and the toy is a small car."},
+
+ {t:"Put it all together", q:"You stretch the rubber band on a toy car and let go. The car zooms away. What happened?", s:"When a stretched rubber band makes a toy car zoom away, the…",
+  o:["Motion turned into stored energy","Stored energy turned into motion","Car turned into a model"], a:1,
+  n:"First the energy was saved in the band. Then it was used to make the car move."},
+ {t:"Put it all together", q:"A battery-powered toy car drives across the room. Where did the energy to move come from?", s:"The energy for a battery toy car to move comes from…",
+  o:["The stored energy in the battery","The color of the car","The floor"], a:0,
+  n:"The battery's stored energy gets used, and the car moves."},
+ {t:"Put it all together", q:"\"We raced two toy cars and kept everything the same except the wheels.\" Which science word is this?", s:"Racing two toy cars and keeping everything the same except the wheels is…",
+  o:["A model","Stored energy","A fair test"], a:2,
+  n:"Only the wheels changed, so it's a fair test."},
+ {t:"Put it all together", q:"\"The race car went around the track in 30 seconds.\" Which science word is this about?", s:"A race car going around the track in 30 seconds tells you about its…",
+  o:["Speed","Stored energy","Model"], a:0,
+  n:"How long it took tells you how FAST it went."},
+ {t:"Put it all together", q:"Two rubber band cars are the same, except one band is stretched farther. Which car goes faster?", s:"The rubber band car that goes faster is the one with…",
+  o:["The band stretched just a little","The band not stretched at all","The band stretched farther"], a:2,
+  n:"More stretch, more stored energy, more speed. And it's a fair test, since only the stretch changed!"},
+ {t:"Put it all together", q:"When the wind makes a wind turbine spin, which two science words are happening?", s:"When the wind makes a wind turbine spin, the two science words happening are…",
+  o:["Energy and motion","Model and fair test","Stored energy and model"], a:0,
+  n:"The wind's energy makes the blades move. Moving is motion."},
+ {t:"Put it all together", q:"A hot air balloon's burner heats the air inside, and the balloon rises. What made it move?", s:"The hot air balloon rises because of…",
+  o:["The stripes on the balloon","Energy from the burner's heat","The shape of the basket"], a:1,
+  n:"Heat is energy, and it made something happen: the balloon went up!"}
+];
+
+/* the six words from the study sheet, shown on the home screen */
+const WORDS = [
+  ["Energy","The ability to make something happen or do an action."],
+  ["Stored energy","Energy saved inside something that is not being used yet. Rubber bands and batteries are examples."],
+  ["Motion","A change in an object's position."],
+  ["Speed","How FAST something moves."],
+  ["Fair test","An experiment where you only change one component at a time."],
+  ["Model","A pretend version of something, a smaller version of something bigger."]
+];
+
+const RANKS = [
+  {min:0,  name:"Dead Battery",       quip:"Every battery starts out empty. Recharge and run it again."},
+  {min:40, name:"Loose Rubber Band",  quip:"Not stretched yet, but you've got real potential."},
+  {min:55, name:"Wound-Up Toy Car",   quip:"Your energy is stored up. Let it go on the next round."},
+  {min:70, name:"Hot Air Balloon",    quip:"Your position is changing fast, and it's going up."},
+  {min:85, name:"Wind Turbine",       quip:"Spinning out right answers and powering the whole town."},
+  {min:95, name:"Lightning Race Car", quip:"Top speed. You are ready for that quiz."}
+];
+const LETTERS = ["A","B","C","D"];
+const HOME_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="#13203A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/></svg>';
+const BOLT = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>';
+
+const app = document.getElementById("app");
+let queue = [], history = [], card = null, done = 0, total = 0, locked = false, confirming = false;
+let streak = 0, bestStreak = 0;
+
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function shuffled(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function topics(){ const seen=[]; QUESTIONS.forEach(function(q){ if(seen.indexOf(q.t)<0) seen.push(q.t); }); return seen; }
+
+function readBest(){ try{ const v=localStorage.getItem("energyCardsBest"); return v?JSON.parse(v):null; }catch(e){ return null; } }
+function saveBest(pct){ try{ const b=readBest(); if(!b||pct>b.pct) localStorage.setItem("energyCardsBest",JSON.stringify({pct:pct,when:new Date().toLocaleDateString()})); }catch(e){} }
+function rankFor(pct){ let r=RANKS[0]; for(const x of RANKS) if(pct>=x.min) r=x; return r; }
+
+/* ---------------- home ---------------- */
+function home(){
+  card = null; queue = []; confirming = false;
+  const best = readBest();
+  const ts = topics();
+  const last = ts[ts.length - 1];
+  app.innerHTML =
+   '<div class="hero">' +
+     '<span class="crest">' + BOLT + '4th grade science</span>' +
+     '<h1>Energy Science<br>Cards</h1>' +
+     '<p class="lede">Charge up your battery! Get a card right and it is gone for good. Miss one and it comes back later, asked a different way.</p>' +
+     (best ? '<p class="best">Best first-try score: <b>' + best.pct + '%</b> on ' + esc(best.when) + '</p>' : '') +
+     '<div class="modes">' +
+       '<button class="btn" data-mode="all">All ' + QUESTIONS.length + ' cards<small>The full study sheet</small></button>' +
+       '<button class="btn ghost" data-mode="ten">Quick 10<small>A short warm up before bed</small></button>' +
+       '<button class="btn ghost" data-mode="twenty">Half deck<small>20 random cards</small></button>' +
+     '</div>' +
+     '<h3>Practice one word</h3>' +
+     '<div class="topics">' +
+       ts.map(function(t){
+         const c = QUESTIONS.filter(function(q){ return q.t===t; }).length;
+         const sub = t === last ? c + " cards that mix all the words" : c + " cards";
+         return '<button data-topic="' + esc(t) + '"' + (t === last ? ' class="wide"' : '') + '>' + esc(t) + '<span>' + sub + '</span></button>';
+       }).join("") +
+     '</div>' +
+     '<h3>The six science words</h3>' +
+     '<div class="words">' + WORDS.map(function(w){ return '<div class="word"><b>' + esc(w[0]) + ':</b> ' + esc(w[1]) + '</div>'; }).join("") + '</div>' +
+     '<h3>How you rank</h3>' +
+     '<ul class="ladder">' + RANKS.map(function(r){ return '<li>' + esc(r.name) + ' <span class="pct">' + (r.min ? r.min + "%" : "under 40%") + '</span></li>'; }).join("") + '</ul>' +
+     '<footer>Built from the Energy Science Words study sheet</footer>' +
+   '</div>';
+
+  app.querySelectorAll("[data-mode]").forEach(function(b){ b.addEventListener("click", function(){ begin(b.dataset.mode); }); });
+  app.querySelectorAll("[data-topic]").forEach(function(b){ b.addEventListener("click", function(){ begin("topic", b.dataset.topic); }); });
+  window.scrollTo(0,0);
+}
+
+/* ---------------- session ---------------- */
+function begin(mode, topic){
+  let picks = QUESTIONS.map(function(_,i){ return i; });
+  if(mode === "ten") picks = shuffled(picks).slice(0,10);
+  else if(mode === "twenty") picks = shuffled(picks).slice(0,20);
+  else if(mode === "topic") picks = shuffled(picks.filter(function(i){ return QUESTIONS[i].t === topic; }));
+  else picks = shuffled(picks);
+
+  queue = picks.map(function(i){ return {qi:i, misses:0, seen:0}; });
+  history = queue.slice();
+  total = queue.length; done = 0; confirming = false;
+  streak = 0; bestStreak = 0;
+  next();
+}
+
+function next(){
+  if(!queue.length){ finish(); return; }
+  card = queue.shift();
+  card.seen++;
+  draw();
+}
+
+/* three ways to ask: 0 = the question, 1 = true or false, 2 = finish the sentence */
+function formFor(c){ return c.misses === 0 ? 0 : ((c.misses - 1) % 2) + 1; }
+
+function streakChip(){
+  if(streak < 2) return '<span></span>';
+  return '<span class="streak' + (streak >= 5 ? ' hot' : '') + '">' + BOLT + streak + ' in a row</span>';
+}
+
+function topbar(){
+  const pct = total ? Math.round(done / total * 100) : 0;
+  return '<div class="barrow">' +
+       '<button class="home" id="homebtn" aria-label="Back to the home screen">' + HOME_ICON + '</button>' +
+       '<div class="battery" role="img" aria-label="Battery charged ' + pct + ' percent"><div class="cell"><i style="width:' + pct + '%"></i></div><div class="cap"></div></div>' +
+     '</div>' +
+     '<div class="status"><span><b>' + done + '</b> of ' + total + ' charged</span>' + streakChip() + '</div>';
+}
+
+function draw(){
+  const q = QUESTIONS[card.qi];
+  const form = formFor(card);
+  let body = "";
+
+  if(form === 1){
+    const showCorrect = Math.random() < 0.5;
+    let shown;
+    if(showCorrect) shown = q.a;
+    else { const wrongs = q.o.map(function(_,i){ return i; }).filter(function(i){ return i !== q.a; }); shown = wrongs[Math.floor(Math.random()*wrongs.length)]; }
+    card.tfShown = shown; card.tfTrue = (shown === q.a);
+    body =
+      '<p class="stem">True or false?</p>' +
+      '<p class="ask">' + esc(q.s) + '</p>' +
+      '<p class="claim">' + esc(q.o[shown]) + '</p>' +
+      '<div class="tf" id="opts">' +
+        '<button class="opt" data-pick="true">True</button>' +
+        '<button class="opt" data-pick="false">False</button>' +
+      '</div>';
+  } else {
+    const idxs = shuffled(q.o.map(function(_,i){ return i; }));
+    const head = form === 2
+      ? '<p class="stem">Finish the sentence</p><p class="ask">' + esc(q.s) + '</p>'
+      : '<p class="ask">' + esc(q.q) + '</p>';
+    body = head + '<div id="opts">' +
+      idxs.map(function(oi,pos){
+        return '<button class="opt" data-pick="' + oi + '"><span class="dot">' + LETTERS[pos] + '</span><span>' + esc(q.o[oi]) + '</span></button>';
+      }).join("") + '</div>';
+  }
+
+  app.innerHTML =
+   '<div class="topbar" id="topbar">' + topbar() + '</div>' +
+   '<div class="card" id="card">' +
+     '<div class="tags"><span class="topic">' + esc(q.t) + '</span>' +
+       (card.seen > 1 ? '<span class="again">Round ' + card.seen + '</span>' : '') + '</div>' +
+     body +
+     '<div id="after"></div>' +
+   '</div>';
+
+  locked = false;
+  app.querySelectorAll(".opt").forEach(function(b){
+    b.addEventListener("click", function(){ answer(b.dataset.pick, form, b); });
+  });
+  document.getElementById("homebtn").addEventListener("click", askLeave);
+  window.scrollTo(0,0);
+}
+
+function askLeave(){
+  if(confirming) return;
+  confirming = true;
+  const row = document.querySelector(".barrow");
+  const bar = document.createElement("div");
+  bar.className = "leaving";
+  bar.innerHTML = '<span style="flex:1">Leave this round?</span>' +
+    '<button id="stay">Stay</button><button id="go" style="background:#13203A;color:#fff">Leave</button>';
+  row.parentNode.insertBefore(bar, row.nextSibling);
+  document.getElementById("stay").addEventListener("click", function(){ bar.remove(); confirming = false; });
+  document.getElementById("go").addEventListener("click", home);
+}
+
+function sparks(btn){
+  if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const cardEl = document.getElementById("card");
+  const cr = cardEl.getBoundingClientRect(), br = btn.getBoundingClientRect();
+  const x = br.left - cr.left + br.width / 2, y = br.top - cr.top + br.height / 2;
+  for(let i = 0; i < 14; i++){
+    const s = document.createElement("span");
+    s.className = "zap";
+    const ang = Math.random() * Math.PI * 2, dist = 50 + Math.random() * 70;
+    s.style.left = (x - 5) + "px"; s.style.top = (y - 5) + "px";
+    s.style.setProperty("--dx", Math.cos(ang) * dist + "px");
+    s.style.setProperty("--dy", Math.sin(ang) * dist + "px");
+    if(i % 3 === 0) s.style.background = "#1F8A4C";
+    cardEl.appendChild(s);
+    setTimeout(function(){ s.remove(); }, 700);
+  }
+}
+
+const CHEERS = {3:"Three in a row. You're charging up!", 5:"Five in a row. Supercharged!", 8:"Eight in a row. Full speed ahead!", 12:"Twelve in a row. You're a lightning bolt!"};
+
+function answer(pick, form, btn){
+  if(locked) return;
+  locked = true;
+  const q = QUESTIONS[card.qi];
+  let ok;
+
+  document.getElementById("opts").classList.add("locked");
+  if(form === 1){
+    ok = (pick === "true") === card.tfTrue;
+    app.querySelectorAll(".opt").forEach(function(b){
+      const isTrue = b.dataset.pick === "true";
+      if(isTrue === card.tfTrue) b.classList.add("right");
+      else if(b.dataset.pick === pick) b.classList.add("wrong");
+      else b.classList.add("dim");
+    });
+  } else {
+    const chosen = parseInt(pick,10);
+    ok = chosen === q.a;
+    app.querySelectorAll(".opt").forEach(function(b){
+      const oi = parseInt(b.dataset.pick,10);
+      if(oi === q.a) b.classList.add("right");
+      else if(oi === chosen) b.classList.add("wrong");
+      else b.classList.add("dim");
+    });
+  }
+
+  let msg, cheer = "";
+  if(ok){
+    done++;
+    streak++;
+    if(streak > bestStreak) bestStreak = streak;
+    if(CHEERS[streak]) cheer = '<span class="power">' + CHEERS[streak] + '</span>';
+    msg = '<b>Yes!</b> ' + esc(q.n) + (card.seen > 1 ? " That one is retired now." : "") + cheer;
+    sparks(btn);
+    btn.classList.add("pop");
+  } else {
+    streak = 0;
+    card.misses++;
+    const spot = Math.min(queue.length, 3 + Math.floor(Math.random()*3));
+    queue.splice(spot, 0, card);
+    let right = "";
+    if(form === 1 && !card.tfTrue) right = ' The right answer: <b>' + esc(q.o[q.a]) + '</b>.';
+    msg = '<b>Not quite.</b>' + right + ' ' + esc(q.n) + ' This card goes back in the pile.';
+  }
+
+  /* refresh the battery and streak without redrawing the card */
+  document.getElementById("topbar").innerHTML = topbar();
+  document.getElementById("homebtn").addEventListener("click", askLeave);
+  confirming = false;
+
+  const last = !queue.length;
+  document.getElementById("after").innerHTML =
+    '<p class="note ' + (ok ? "good" : "bad") + '">' + msg + '</p>' +
+    '<button class="btn" id="next">' + (last ? "See your rank" : "Next card") + '</button>';
+  document.getElementById("next").addEventListener("click", next);
+}
+
+/* ---------------- results ---------------- */
+function finish(){
+  const repeats = history.filter(function(c){ return c.misses > 0; });
+  const firstTry = total - repeats.length;
+  const pct = total ? Math.round(firstTry / total * 100) : 0;
+  const r = rankFor(pct);
+  saveBest(pct);
+
+  app.innerHTML =
+   '<div style="padding-top:22px">' +
+     '<div class="badge">' +
+       '<div class="ring">' + pct + '%</div>' +
+       '<p class="rank">' + esc(r.name) + '</p>' +
+       '<p class="tally">' + firstTry + ' of ' + total + ' right on the first try</p>' +
+       (bestStreak >= 2 ? '<p class="tally">Longest streak: ' + bestStreak + ' in a row</p>' : '') +
+       '<p class="quip">' + esc(r.quip) + '</p>' +
+     '</div>' +
+     (repeats.length
+       ? '<h3>These took more than one round</h3>' +
+         repeats.map(function(c){
+           const q = QUESTIONS[c.qi];
+           return '<div class="miss"><p class="mq">' + esc(q.q) + '</p><p class="ma">' + esc(q.o[q.a]) + '</p>' +
+                  '<p class="mn">' + esc(q.n) + '</p></div>';
+         }).join("")
+       : '<p class="lede" style="margin-top:24px">Every card on the first try. Your battery is 100% charged.</p>') +
+     (repeats.length ? '<button class="btn" id="retry">Drill just these ' + repeats.length + '</button>' : '') +
+     '<button class="btn ' + (repeats.length ? "ghost" : "") + '" id="gohome">Back to the home screen</button>' +
+     '<footer>Built from the Energy Science Words study sheet</footer>' +
+   '</div>';
+
+  const retry = document.getElementById("retry");
+  if(retry) retry.addEventListener("click", function(){
+    queue = shuffled(repeats).map(function(c){ return {qi:c.qi, misses:0, seen:0}; });
+    history = queue.slice();
+    total = queue.length; done = 0; streak = 0; bestStreak = 0; next();
+  });
+  document.getElementById("gohome").addEventListener("click", home);
+  window.scrollTo(0,0);
+}
+
+home();
+</script>
+</body>
+</html>
