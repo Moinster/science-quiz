@@ -60,7 +60,12 @@ button{font-family:inherit;font-size:17px;cursor:pointer;border:none;background:
 .ladder li:last-child{color:var(--ink);font-weight:600}
 .ladder li:last-child::before{background:var(--spark);box-shadow:0 0 0 4px var(--spark-pale)}
 .ladder .pct{font-size:13px;font-weight:400;color:var(--ink-soft)}
-.best{margin-top:-8px;margin-bottom:18px;font-size:15px;color:var(--ink-soft)}
+.best{margin:0 0 6px;font-size:15px;color:var(--ink-soft)}
+.setpick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;margin:0 0 14px;
+  background:var(--card);border:2px solid var(--line);border-radius:14px}
+.setpick button{min-height:44px;border-radius:10px;font-size:16px;font-weight:600;color:var(--ink-soft)}
+.setpick button.on{background:var(--ink);color:#fff}
+.setpick button:focus-visible{outline:3px solid var(--spark);outline-offset:2px}
 .topics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .topics button{background:var(--card);border:2px solid var(--line);border-radius:14px;
   padding:13px 14px;text-align:left;font-size:15px;font-weight:600;line-height:1.25;min-height:64px}
@@ -153,7 +158,7 @@ footer{margin-top:26px;font-size:13px;color:var(--ink-soft);text-align:center}
 /* q = question wording, s = sentence stem for the other formats,
    o = options (o[a] is correct), n = the explanation.
    Every option has to finish the stem s, because the true/false form shows s + one option. */
-const QUESTIONS = [
+const PART1 = [
  {t:"Energy", q:"What is energy?", s:"Energy is…",
   o:["The ability to make something happen or do an action","A pretend version of something bigger","How fast something moves"], a:0,
   n:"No energy, no action. Energy is what makes things happen."},
@@ -285,15 +290,153 @@ const QUESTIONS = [
   n:"Heat is energy, and it made something happen: the balloon went up!"}
 ];
 
-/* the six words from the study sheet, shown on the home screen */
-const WORDS = [
-  ["Energy","The ability to make something happen or do an action."],
-  ["Stored energy","Energy saved inside something that is not being used yet. Rubber bands and batteries are examples."],
-  ["Motion","A change in an object's position."],
-  ["Speed","How FAST something moves."],
-  ["Fair test","An experiment where you only change one component at a time."],
-  ["Model","A pretend version of something, a smaller version of something bigger."]
+const PART2 = [
+ {t:"Gravity", q:"What is gravity?", s:"Gravity is…",
+  o:["An invisible force that pulls objects down toward the Earth","A loud sound you can hear","A test used to answer a question"], a:0,
+  n:"You can't see gravity, but it is always pulling things down toward the Earth."},
+ {t:"Gravity", q:"An apple breaks off a tree branch. Which way does it go?", s:"When an apple breaks off a tree branch, it goes…",
+  o:["Up into the sky","Down to the ground","Sideways, floating in the air"], a:1,
+  n:"Gravity pulls it down toward the Earth. Thud!"},
+ {t:"Gravity", q:"You throw a ball high in the air. Why does it come back down?", s:"A ball you throw up high comes back down because of…",
+  o:["Sound energy","A collision","Gravity"], a:2,
+  n:"Gravity pulls everything back down toward the Earth, even if you throw it up."},
+ {t:"Gravity", q:"Can you see gravity?", s:"Gravity is a force that you…",
+  o:["Can see as a bright light","Cannot see, but it still pulls things down","Can only see at night"], a:1,
+  n:"Gravity is invisible. You see what it does, like things falling."},
+ {t:"Gravity", q:"Gravity pulls objects toward what?", s:"Gravity pulls objects toward…",
+  o:["The Earth","The sky","The nearest wall"], a:0,
+  n:"Gravity always pulls down, toward the Earth."},
+
+ {t:"Height energy", q:"What is gravitational energy?", s:"Gravitational energy is…",
+  o:["Energy that comes from sound","Energy that is due to gravity","Energy that is all used up"], a:1,
+  n:"It comes from gravity. Its nickname is height energy."},
+ {t:"Height energy", q:"Gravitational energy has a nickname. What is it?", s:"Another name for gravitational energy is…",
+  o:["Height energy","Sound energy","Crash energy"], a:0,
+  n:"Height energy, because the higher something is, the more it has."},
+ {t:"Height energy", q:"A bike rider is on a big hill. Where does the rider have the MOST height energy?", s:"A bike rider on a hill has the most height energy…",
+  o:["At the bottom of the hill","Halfway down the hill","At the top of the hill"], a:2,
+  n:"Higher up means more height energy."},
+ {t:"Height energy", q:"The bike rider coasts down the hill without pedaling and speeds up. What is happening to the height energy?", s:"As the rider coasts down the hill and speeds up, the height energy…",
+  o:["Turns into motion and speed","Grows bigger and bigger","Turns into sound and nothing else"], a:0,
+  n:"Going down, height energy changes into speed. That's why you go faster without pedaling!"},
+ {t:"Height energy", q:"Which ball has more height energy?", s:"The ball with more height energy is the one…",
+  o:["Sitting on the floor","Sitting on a high shelf","Rolling on the floor"], a:1,
+  n:"The shelf is higher up, so that ball has more height energy."},
+ {t:"Height energy", q:"You drop the same ball from a chair and from the top of a slide. Which drop hits the ground harder?", s:"The drop that hits the ground harder is the one from…",
+  o:["The chair","The top of the slide","Neither, they hit the same"], a:1,
+  n:"Higher start, more height energy, so it's going faster when it lands."},
+
+ {t:"Collision", q:"What is a collision?", s:"A collision is…",
+  o:["When one object hits or crashes into another object","When an object floats in the air","When a sound gets quieter"], a:0,
+  n:"Collision is a science word for a crash."},
+ {t:"Collision", q:"Which of these is a collision?", s:"An example of a collision is…",
+  o:["A ball sitting on a shelf","A bowling ball hitting the pins","A bird resting in its nest"], a:1,
+  n:"The bowling ball crashes into the pins. That's a collision!"},
+ {t:"Collision", q:"Two toy cars crash into each other. What can happen to their energy?", s:"When two toy cars crash into each other, their energy can…",
+  o:["Disappear completely","Turn into more gravity","Transfer from one car to the other"], a:2,
+  n:"In a crash, energy moves from one car to the other, and some turns into sound."},
+ {t:"Collision", q:"A bat hits a baseball with a loud CRACK. What is the crack?", s:"The CRACK you hear when a bat hits a baseball is…",
+  o:["Sound energy from the collision","Gravity pulling on the bat","Height energy"], a:0,
+  n:"Collisions often make sound. Some of the energy turns into sound you can hear."},
+ {t:"Collision", q:"A fast ball and a slow ball each hit a wall. Which collision is harder and louder?", s:"The collision that is harder and louder is the one with…",
+  o:["The slow ball","The fast ball","Neither, they are the same"], a:1,
+  n:"The faster ball has more energy, so it makes a bigger crash."},
+
+ {t:"Experiment", q:"What is an experiment?", s:"An experiment is…",
+  o:["A guess you never check","A loud noise from a speaker","A test used to discover new information about a question"], a:2,
+  n:"An experiment tests something to find out new information."},
+ {t:"Experiment", q:"What does every experiment start with?", s:"Every experiment starts with…",
+  o:["A question","The answer already written down","A collision"], a:0,
+  n:"First you ask a question. Then you test to find the answer."},
+ {t:"Experiment", q:"Which of these is an experiment?", s:"An example of an experiment is…",
+  o:["Reading the answer in the back of the book","Dropping a ball from different heights to see which bounces highest","Guessing which ball is heavier and stopping there"], a:1,
+  n:"Testing to find out something new is an experiment."},
+ {t:"Experiment", q:"You wonder: do marbles roll farther down a taller ramp? How do you find out?", s:"To find out if marbles roll farther down a taller ramp, you…",
+  o:["Ask a friend to guess","Do an experiment with a short ramp and a tall ramp","Pick the answer you like best"], a:1,
+  n:"An experiment helps you discover the answer for real."},
+ {t:"Experiment", q:"You do an experiment to see if ramp height matters. What should you change?", s:"When you test if ramp height matters, you should change…",
+  o:["Only the height of the ramp","The ramp, the marble, and the floor","Nothing at all"], a:0,
+  n:"Change only one thing so you know what made the difference. That makes it a fair test."},
+
+ {t:"Energy transfer", q:"What is energy transfer?", s:"Energy transfer is…",
+  o:["When energy stays in one place forever","When energy travels from one place to another","When an object falls down"], a:1,
+  n:"Transfer means move. The energy travels from one place to another."},
+ {t:"Energy transfer", q:"A rolling marble hits a marble that is sitting still. The still marble starts rolling. Why?", s:"The still marble starts rolling because…",
+  o:["Energy transferred from the rolling marble","Gravity pushed it sideways","It heard a loud sound"], a:0,
+  n:"The energy traveled from the first marble into the second one."},
+ {t:"Energy transfer", q:"You kick a soccer ball. Which way does the energy travel?", s:"When you kick a soccer ball, the energy travels…",
+  o:["From the ball to your foot","From the grass to the sky","From your foot to the ball"], a:2,
+  n:"Energy transfer! It traveled from your foot into the ball."},
+ {t:"Energy transfer", q:"Which of these is energy transfer?", s:"An example of energy transfer is…",
+  o:["A cue ball hitting another pool ball and making it move","A book resting on a table","A pencil lying in a drawer"], a:0,
+  n:"The cue ball's energy travels into the other ball and makes it move."},
+ {t:"Energy transfer", q:"You hit a drum with a stick. Where does the energy go?", s:"When you hit a drum with a stick, the energy…",
+  o:["Stays in the stick","Travels from the stick to the drum and makes sound","Turns the drum into gravity"], a:1,
+  n:"The energy moves from the stick into the drum, and you hear it as sound."},
+ {t:"Energy transfer", q:"Sound travels from a speaker to your ears. Is that energy transfer?", s:"Sound traveling from a speaker to your ears is…",
+  o:["Not energy transfer, because you can't see it","A collision between two speakers","Energy transfer, because energy travels from one place to another"], a:2,
+  n:"Sound carries energy from the speaker all the way to your ears."},
+
+ {t:"Sound energy", q:"What is sound energy?", s:"Sound energy is…",
+  o:["Energy in the form of sound that can be heard","Energy you can only see","Energy that pulls things down"], a:0,
+  n:"If you can hear it, it's sound energy."},
+ {t:"Sound energy", q:"Which of these makes sound energy?", s:"Something that makes sound energy is…",
+  o:["A rock sitting quietly on the ground","A speaker playing music","A closed book on a shelf"], a:1,
+  n:"The speaker makes sound you can hear. That's sound energy."},
+ {t:"Sound energy", q:"How do you know sound energy is there?", s:"You know sound energy is there because you can…",
+  o:["Hear it","Taste it","Hold it in your hand"], a:0,
+  n:"Sound energy is energy you can hear."},
+ {t:"Sound energy", q:"You turn the music up louder. What happens to the sound energy?", s:"When you turn the music up louder, the sound energy…",
+  o:["Gets smaller","Gets bigger","Turns into gravity"], a:1,
+  n:"Louder sound carries more energy."},
+ {t:"Sound energy", q:"Two cymbals crash together. Which science words are happening?", s:"When two cymbals crash together, you get…",
+  o:["Gravity and nothing else","An experiment and height energy","A collision and sound energy"], a:2,
+  n:"The crash is a collision, and the CLANG is sound energy."},
+
+ {t:"Put it all together", q:"An apple falls from a tree and hits the ground with a THUD. What is the right order?", s:"When an apple falls and hits the ground with a thud, the order is…",
+  o:["Gravity pulls it down, then the collision makes a sound","The sound pulls it down, then gravity makes a thud","The thud happens first, then the apple falls"], a:0,
+  n:"First gravity pulls it down. Then it collides with the ground and makes sound energy."},
+ {t:"Put it all together", q:"A ball rolls down a ramp and knocks over a block tower. What happened to the energy?", s:"When a ball rolls down a ramp and knocks over a block tower, the energy…",
+  o:["Disappeared at the bottom of the ramp","Started as height energy, then transferred to the blocks","Came from the blocks"], a:1,
+  n:"Height energy at the top became motion, and the collision transferred it to the blocks."},
+ {t:"Put it all together", q:"You drop a ball from different heights to see if it makes a louder sound. What are you doing?", s:"Dropping a ball from different heights to see if it gets louder is…",
+  o:["An experiment","A collision and nothing else","Sound energy and nothing else"], a:0,
+  n:"You're testing to answer a question. That's an experiment!"},
+ {t:"Put it all together", q:"A bowling ball crashes into the pins. Which three science words fit?", s:"When a bowling ball crashes into the pins, you see…",
+  o:["An experiment, a model, and height energy","Collision, energy transfer, and sound energy","Nothing, because the pins do not move"], a:1,
+  n:"The crash is a collision, the pins get the energy (transfer), and you hear the CRASH (sound)."},
+ {t:"Put it all together", q:"A bike rider at the top of a hill coasts down and crashes into a pile of leaves. What happens FIRST?", s:"The first thing that happens is…",
+  o:["The rider crashes into the leaves","The leaves make a crunching sound","Gravity pulls the rider down the hill"], a:2,
+  n:"Gravity pulls the rider down first. The collision with the leaves comes last."},
+ {t:"Put it all together", q:"You roll one marble into a line of marbles. The marble at the far end shoots away. Why?", s:"The marble at the far end shoots away because…",
+  o:["Energy traveled through the line of marbles","Gravity pushed it sideways","It got scared by the sound"], a:0,
+  n:"Energy transfer! The energy passed through each marble to the last one."}
 ];
+
+/* p = which study sheet the card came from */
+const QUESTIONS = PART1.map(function(q){ return Object.assign({p:"1"}, q); })
+  .concat(PART2.map(function(q){ return Object.assign({p:"2"}, q); }));
+
+/* the words from each study sheet, shown on the home screen */
+const WORDS = {
+  "1": [
+    ["Energy","The ability to make something happen or do an action."],
+    ["Stored energy","Energy saved inside something that is not being used yet. Rubber bands and batteries are examples."],
+    ["Motion","A change in an object's position."],
+    ["Speed","How FAST something moves."],
+    ["Fair test","An experiment where you only change one component at a time."],
+    ["Model","A pretend version of something, a smaller version of something bigger."]
+  ],
+  "2": [
+    ["Gravity","An invisible force that pulls any object down, toward the Earth."],
+    ["Gravitational energy (height energy)","Energy that is due to gravity."],
+    ["Collision","When one object hits or crashes into another object."],
+    ["Experiment","A test used to discover new information about a question."],
+    ["Energy transfer","When energy travels from one place to another."],
+    ["Sound energy","Energy that is in the form of sound that can be heard."]
+  ]
+};
+const SETS = [["2","Part 2"],["1","Part 1"],["all","Both"]];
 
 const RANKS = [
   {min:0,  name:"Dead Battery",       quip:"Every battery starts out empty. Recharge and run it again."},
@@ -310,13 +453,22 @@ const BOLT = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7
 const app = document.getElementById("app");
 let queue = [], history = [], card = null, done = 0, total = 0, locked = false, confirming = false;
 let streak = 0, bestStreak = 0;
+let set = readSet();
 
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function shuffled(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
-function topics(){ const seen=[]; QUESTIONS.forEach(function(q){ if(seen.indexOf(q.t)<0) seen.push(q.t); }); return seen; }
+/* indexes into QUESTIONS for the study sheet that is switched on */
+function pool(){ return QUESTIONS.map(function(_,i){ return i; }).filter(function(i){ return set === "all" || QUESTIONS[i].p === set; }); }
+function topics(){
+  const seen=[]; pool().forEach(function(i){ const t=QUESTIONS[i].t; if(seen.indexOf(t)<0) seen.push(t); });
+  /* the mixed-up section always goes last */
+  return seen.filter(function(t){ return t !== "Put it all together"; }).concat(seen.indexOf("Put it all together") >= 0 ? ["Put it all together"] : []);
+}
 
-function readBest(){ try{ const v=localStorage.getItem("energyCardsBest"); return v?JSON.parse(v):null; }catch(e){ return null; } }
-function saveBest(pct){ try{ const b=readBest(); if(!b||pct>b.pct) localStorage.setItem("energyCardsBest",JSON.stringify({pct:pct,when:new Date().toLocaleDateString()})); }catch(e){} }
+function readSet(){ try{ const v=localStorage.getItem("energyCardsSet"); return (v==="1"||v==="2"||v==="all")?v:"2"; }catch(e){ return "2"; } }
+function saveSet(v){ try{ localStorage.setItem("energyCardsSet",v); }catch(e){} }
+function readBest(){ try{ const v=localStorage.getItem("energyCardsBest_"+set); return v?JSON.parse(v):null; }catch(e){ return null; } }
+function saveBest(pct){ try{ const b=readBest(); if(!b||pct>b.pct) localStorage.setItem("energyCardsBest_"+set,JSON.stringify({pct:pct,when:new Date().toLocaleDateString()})); }catch(e){} }
 function rankFor(pct){ let r=RANKS[0]; for(const x of RANKS) if(pct>=x.min) r=x; return r; }
 
 /* ---------------- home ---------------- */
@@ -324,33 +476,40 @@ function home(){
   card = null; queue = []; confirming = false;
   const best = readBest();
   const ts = topics();
-  const last = ts[ts.length - 1];
+  const ps = pool();
+  const mix = "Put it all together";
+  const words = set === "all" ? WORDS["1"].concat(WORDS["2"]) : WORDS[set];
+  const sheet = set === "all" ? "Both study sheets" : "The full Part " + set + " study sheet";
   app.innerHTML =
    '<div class="hero">' +
      '<span class="crest">' + BOLT + '4th grade science</span>' +
      '<h1>Energy Science<br>Cards</h1>' +
      '<p class="lede">Charge up your battery! Get a card right and it is gone for good. Miss one and it comes back later, asked a different way.</p>' +
+     '<div class="setpick" role="group" aria-label="Which study sheet">' +
+       SETS.map(function(s){ return '<button data-set="' + s[0] + '" aria-pressed="' + (s[0] === set) + '"' + (s[0] === set ? ' class="on"' : '') + '>' + s[1] + '</button>'; }).join("") +
+     '</div>' +
      (best ? '<p class="best">Best first-try score: <b>' + best.pct + '%</b> on ' + esc(best.when) + '</p>' : '') +
      '<div class="modes">' +
-       '<button class="btn" data-mode="all">All ' + QUESTIONS.length + ' cards<small>The full study sheet</small></button>' +
+       '<button class="btn" data-mode="all">All ' + ps.length + ' cards<small>' + sheet + '</small></button>' +
        '<button class="btn ghost" data-mode="ten">Quick 10<small>A short warm up before bed</small></button>' +
        '<button class="btn ghost" data-mode="twenty">Half deck<small>20 random cards</small></button>' +
      '</div>' +
      '<h3>Practice one word</h3>' +
      '<div class="topics">' +
        ts.map(function(t){
-         const c = QUESTIONS.filter(function(q){ return q.t===t; }).length;
-         const sub = t === last ? c + " cards that mix all the words" : c + " cards";
-         return '<button data-topic="' + esc(t) + '"' + (t === last ? ' class="wide"' : '') + '>' + esc(t) + '<span>' + sub + '</span></button>';
+         const c = ps.filter(function(i){ return QUESTIONS[i].t===t; }).length;
+         const sub = t === mix ? c + " cards that mix all the words" : c + " cards";
+         return '<button data-topic="' + esc(t) + '"' + (t === mix ? ' class="wide"' : '') + '>' + esc(t) + '<span>' + sub + '</span></button>';
        }).join("") +
      '</div>' +
-     '<h3>The six science words</h3>' +
-     '<div class="words">' + WORDS.map(function(w){ return '<div class="word"><b>' + esc(w[0]) + ':</b> ' + esc(w[1]) + '</div>'; }).join("") + '</div>' +
+     '<h3>The ' + (words.length === 6 ? "six" : words.length) + ' science words</h3>' +
+     '<div class="words">' + words.map(function(w){ return '<div class="word"><b>' + esc(w[0]) + ':</b> ' + esc(w[1]) + '</div>'; }).join("") + '</div>' +
      '<h3>How you rank</h3>' +
      '<ul class="ladder">' + RANKS.map(function(r){ return '<li>' + esc(r.name) + ' <span class="pct">' + (r.min ? r.min + "%" : "under 40%") + '</span></li>'; }).join("") + '</ul>' +
-     '<footer>Built from the Energy Science Words study sheet</footer>' +
+     '<footer>Built from the Energy Science Words study sheets</footer>' +
    '</div>';
 
+  app.querySelectorAll("[data-set]").forEach(function(b){ b.addEventListener("click", function(){ set = b.dataset.set; saveSet(set); home(); }); });
   app.querySelectorAll("[data-mode]").forEach(function(b){ b.addEventListener("click", function(){ begin(b.dataset.mode); }); });
   app.querySelectorAll("[data-topic]").forEach(function(b){ b.addEventListener("click", function(){ begin("topic", b.dataset.topic); }); });
   window.scrollTo(0,0);
@@ -358,7 +517,7 @@ function home(){
 
 /* ---------------- session ---------------- */
 function begin(mode, topic){
-  let picks = QUESTIONS.map(function(_,i){ return i; });
+  let picks = pool();
   if(mode === "ten") picks = shuffled(picks).slice(0,10);
   else if(mode === "twenty") picks = shuffled(picks).slice(0,20);
   else if(mode === "topic") picks = shuffled(picks.filter(function(i){ return QUESTIONS[i].t === topic; }));
