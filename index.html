@@ -61,9 +61,9 @@ button{font-family:inherit;font-size:17px;cursor:pointer;border:none;background:
 .ladder li:last-child::before{background:var(--spark);box-shadow:0 0 0 4px var(--spark-pale)}
 .ladder .pct{font-size:13px;font-weight:400;color:var(--ink-soft)}
 .best{margin:0 0 6px;font-size:15px;color:var(--ink-soft)}
-.setpick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;margin:0 0 14px;
+.setpick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:4px;margin:0 0 14px;
   background:var(--card);border:2px solid var(--line);border-radius:14px}
-.setpick button{min-height:44px;border-radius:10px;font-size:16px;font-weight:600;color:var(--ink-soft)}
+.setpick button{min-height:44px;border-radius:10px;font-size:15px;font-weight:600;color:var(--ink-soft);padding:0 4px}
 .setpick button.on{background:var(--ink);color:#fff}
 .setpick button:focus-visible{outline:3px solid var(--spark);outline-offset:2px}
 .topics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -413,9 +413,136 @@ const PART2 = [
   n:"Energy transfer! The energy passed through each marble to the last one."}
 ];
 
+const PART3 = [
+ {t:"Chain reaction machine", q:"What is a chain reaction machine?", s:"A chain reaction machine is…",
+  o:["A machine that uses a series of energy transfers, one after another","A machine that only does one single step","A person who solves problems"], a:0,
+  n:"One thing knocks into the next, and the next, and the next, like a line of dominoes."},
+ {t:"Chain reaction machine", q:"You tip over the first domino in a long line. What happens?", s:"When you tip over the first domino in a long line…",
+  o:["Only the first domino falls","Each domino knocks over the next one, all the way down the line","The dominoes all stand back up"], a:1,
+  n:"That's a chain reaction! Energy transfers from domino to domino."},
+ {t:"Chain reaction machine", q:"What gets passed along from step to step in a chain reaction machine?", s:"In a chain reaction machine, each step passes along…",
+  o:["Paper","Energy","Gravity"], a:1,
+  n:"Each step transfers energy to the next step. That's what keeps it going."},
+ {t:"Chain reaction machine", q:"A marble rolls down a ramp, hits a domino, and the domino rings a bell. What started the chain reaction?", s:"This chain reaction started with…",
+  o:["The bell ringing","The domino falling","The marble rolling down the ramp"], a:2,
+  n:"The first step starts the chain. The bell ringing is the very last step."},
+ {t:"Chain reaction machine", q:"One domino in the middle of the line is too far from the next one. What happens?", s:"If one domino is too far from the next one, the chain reaction…",
+  o:["Stops there, because the energy can't transfer","Keeps going anyway","Goes backward to the start"], a:0,
+  n:"If one step misses, the energy stops traveling and the chain breaks."},
+ {t:"Chain reaction machine", q:"Which of these is a chain reaction?", s:"An example of a chain reaction is…",
+  o:["A ball sitting still in a box","A ball rolls into a toy car, the car rolls into a cup, and the cup knocks over a block","A single book falling off a table"], a:1,
+  n:"Each thing hits the next thing. That's a series of energy transfers."},
+
+ {t:"Engineer", q:"What is an engineer?", s:"An engineer is…",
+  o:["A person who uses science to come up with solutions to problems","A simple machine made of a beam","Energy saved inside something"], a:0,
+  n:"Engineers are problem solvers who use science."},
+ {t:"Engineer", q:"What does an engineer use to come up with solutions?", s:"Engineers come up with solutions by using…",
+  o:["Luck","Science","Magic"], a:1,
+  n:"Engineers use science to figure out what will work."},
+ {t:"Engineer", q:"A town needs a way for cars to cross a river. Who would design a bridge?", s:"The person who would design a bridge over the river is…",
+  o:["A mail carrier","A lifeguard","An engineer"], a:2,
+  n:"Engineers use science to solve problems, like how to get across a river."},
+ {t:"Engineer", q:"Your chain reaction machine stops halfway. Thinking like an engineer, what should you do?", s:"When your machine stops halfway, a good engineer would…",
+  o:["Find the problem, fix it, and test it again","Give up and walk away","Never try again"], a:0,
+  n:"Engineers test, find what went wrong, fix it, and try again."},
+ {t:"Engineer", q:"Which of these is a job an engineer might do?", s:"One job an engineer might do is…",
+  o:["Reading a story out loud to the class","Designing a ramp so a wheelchair can get into a building","Painting a picture of a sunset"], a:1,
+  n:"The engineer uses science to solve a problem: how to get a wheelchair up the steps."},
+
+ {t:"Lever", q:"What is a lever?", s:"A lever is…",
+  o:["A sloped surface like a ramp","A wheel with a rod through the middle","A simple machine made of a beam that pivots from one point"], a:2,
+  n:"A lever is a beam that tips up and down around one point."},
+ {t:"Lever", q:"Which of these is a lever?", s:"An example of a lever is…",
+  o:["A seesaw","A slide","A wagon wheel"], a:0,
+  n:"A seesaw is a beam that pivots on one point in the middle."},
+ {t:"Lever", q:"On a seesaw, where is the one point the beam pivots from?", s:"On a seesaw, the beam pivots from…",
+  o:["The end where you sit","The point in the middle","The ground far away"], a:1,
+  n:"The beam tips up and down around that one middle point."},
+ {t:"Lever", q:"A beam rests on a triangle with a big rock on one end. You push down on the other end. What happens?", s:"When you push down on the other end of the beam, the lever can…",
+  o:["Lift the heavy rock","Make the rock disappear","Glue the rock to the ground"], a:0,
+  n:"Push one end down and the other end goes up. That's how a lever lifts heavy things."},
+ {t:"Lever", q:"You push DOWN on one end of a seesaw. What does the other end do?", s:"When you push down on one end of a seesaw, the other end…",
+  o:["Goes down too","Doesn't move at all","Goes up"], a:2,
+  n:"The beam pivots, so when one side goes down, the other side goes up."},
+ {t:"Lever", q:"What kind of machine is a lever?", s:"A lever is a kind of…",
+  o:["Simple machine","Chain reaction","Engineer"], a:0,
+  n:"Levers, inclined planes, and wheels and axles are all simple machines."},
+
+ {t:"Stored energy", q:"What is stored energy?", s:"Stored energy is…",
+  o:["Energy that is crashing into something","Energy that is not in use, but is saved inside something","A beam that pivots from one point"], a:1,
+  n:"Stored energy is saved up, waiting to be used."},
+ {t:"Stored energy", q:"Which two things does the study sheet give as examples of stored energy?", s:"Two examples of stored energy are…",
+  o:["Seesaws and ramps","Wheels and axles","Batteries and rubber bands"], a:2,
+  n:"A battery and a stretched rubber band both hold energy that isn't being used yet."},
+ {t:"Stored energy", q:"A row of dominoes is standing up, ready to go. Before you push the first one, where is the energy?", s:"Before you push the first domino, the energy is…",
+  o:["Stored in the standing dominoes, waiting to be used","Already all used up","Inside the table"], a:0,
+  n:"Standing dominoes have stored energy. One push lets it out, one domino at a time."},
+ {t:"Stored energy", q:"A chain reaction machine starts with a stretched rubber band. What happens when you let it go?", s:"When you let go of the stretched rubber band, its stored energy…",
+  o:["Stays stuck inside","Is used to start the chain reaction","Turns the band into a lever"], a:1,
+  n:"The saved energy is let out, and it starts the first step of the machine."},
+ {t:"Stored energy", q:"A toy car has a battery in it, but it is switched off. What kind of energy does the battery have?", s:"A battery in a toy car that is switched off has…",
+  o:["Sound energy","No energy at all","Stored energy"], a:2,
+  n:"The energy is saved inside the battery. Switch it on to use it."},
+
+ {t:"Inclined plane", q:"What is an inclined plane?", s:"An inclined plane is…",
+  o:["A simple machine with a gently sloped surface","A beam that pivots from one point","An airplane that flies at an angle"], a:0,
+  n:"Inclined means tilted, and plane means a flat surface. It's a ramp, not an airplane!"},
+ {t:"Inclined plane", q:"Which of these is an inclined plane?", s:"An example of an inclined plane is…",
+  o:["A seesaw","A ramp","A bicycle wheel"], a:1,
+  n:"Ramps are examples of inclined planes."},
+ {t:"Inclined plane", q:"Why do movers use a ramp to get a heavy box up into a truck?", s:"Movers use a ramp because it lets them move the box up…",
+  o:["With more force","Without moving it at all","With less force"], a:2,
+  n:"An inclined plane helps move objects upward with less force."},
+ {t:"Inclined plane", q:"Which ramp makes it EASIEST to push a heavy cart up to the same height?", s:"The ramp that makes it easiest to push a heavy cart up is…",
+  o:["A long, gently sloped ramp","A short, steep ramp","A straight wall going up"], a:0,
+  n:"A gentle slope takes less force. It's a longer trip, but it's easier."},
+ {t:"Inclined plane", q:"A wheelchair ramp at school is an example of which simple machine?", s:"A wheelchair ramp is an example of…",
+  o:["A lever","An inclined plane","A chain reaction"], a:1,
+  n:"It's a gently sloped surface that helps move up with less force."},
+ {t:"Inclined plane", q:"A slide at the playground is shaped like which simple machine?", s:"A playground slide is shaped like…",
+  o:["A wheel and axle","A lever","An inclined plane"], a:2,
+  n:"A slide is a sloped surface, just like a ramp."},
+
+ {t:"Wheel and axle", q:"What is a wheel and axle?", s:"A wheel and axle is…",
+  o:["A simple machine used to move objects across a distance","A sloped surface for moving things up","A person who solves problems"], a:0,
+  n:"A wheel and axle helps things roll from one place to another."},
+ {t:"Wheel and axle", q:"In a wheel and axle, what is the axle?", s:"The axle is…",
+  o:["The rubber on the outside of the wheel","The rod that goes through the middle of the wheel","The road the wheel rolls on"], a:1,
+  n:"The axle is the rod in the center. The wheel turns around it."},
+ {t:"Wheel and axle", q:"Which of these has wheels and axles?", s:"Something that has wheels and axles is…",
+  o:["A seesaw","A slide","A car"], a:2,
+  n:"Cars have wheels and axles, just like the study sheet says."},
+ {t:"Wheel and axle", q:"Why is it easier to move a heavy box in a wagon than to drag it on the ground?", s:"Moving a heavy box is easier in a wagon because…",
+  o:["The wheels and axles help it roll","The wagon makes the box lighter","The wagon is a lever"], a:0,
+  n:"Rolling is much easier than dragging. The box weighs the same either way!"},
+ {t:"Wheel and axle", q:"Which simple machine is best for moving something a long way across the floor?", s:"The simple machine that's best for moving something across the floor is…",
+  o:["A lever","A wheel and axle","An inclined plane"], a:1,
+  n:"A wheel and axle moves objects across a distance."},
+ {t:"Wheel and axle", q:"Which of these does NOT use a wheel and axle?", s:"Something that does NOT use a wheel and axle is…",
+  o:["A bicycle","A skateboard","A seesaw"], a:2,
+  n:"A seesaw is a lever. Bikes and skateboards roll on wheels and axles."},
+
+ {t:"Put it all together", q:"A seesaw, a ramp, and a car wheel are three simple machines. What are they called?", s:"A seesaw, a ramp, and a car wheel are…",
+  o:["A lever, an inclined plane, and a wheel and axle","A chain reaction, an engineer, and stored energy","Three kinds of sound energy"], a:0,
+  n:"Seesaw = lever. Ramp = inclined plane. Car wheel = wheel and axle."},
+ {t:"Put it all together", q:"An engineer builds a machine: a toy car rolls down a ramp and hits a lever, which flips a ball into a cup. Which simple machines are in it?", s:"The simple machines in this chain reaction machine are…",
+  o:["Only a lever","A wheel and axle, an inclined plane, and a lever","No simple machines at all"], a:1,
+  n:"The car has wheels and axles, the ramp is an inclined plane, and the flipper is a lever."},
+ {t:"Put it all together", q:"In a chain reaction machine, what keeps it going from one step to the next?", s:"Each step of a chain reaction machine keeps going because…",
+  o:["Each step has its own battery","Someone pushes every step by hand","Energy transfers from one step to the next"], a:2,
+  n:"It's a series of energy transfers. Each step passes energy to the next."},
+ {t:"Put it all together", q:"A toy car is sitting at the top of a ramp. What kind of energy does it have before it rolls?", s:"Before it rolls, a toy car at the top of a ramp has…",
+  o:["Stored energy, because it is up high","Sound energy","No energy, because it isn't moving"], a:0,
+  n:"Being up high stores energy (height energy). When it rolls down, the energy turns into motion."},
+ {t:"Put it all together", q:"Your class needs to get a heavy box up onto the stage. Thinking like an engineer, which simple machine could help?", s:"To get a heavy box up onto the stage with less force, an engineer could use…",
+  o:["A bell","An inclined plane (a ramp)","A domino"], a:1,
+  n:"An engineer uses science to solve the problem. A ramp moves things up with less force."}
+];
+
 /* p = which study sheet the card came from */
 const QUESTIONS = PART1.map(function(q){ return Object.assign({p:"1"}, q); })
-  .concat(PART2.map(function(q){ return Object.assign({p:"2"}, q); }));
+  .concat(PART2.map(function(q){ return Object.assign({p:"2"}, q); }))
+  .concat(PART3.map(function(q){ return Object.assign({p:"3"}, q); }));
 
 /* the words from each study sheet, shown on the home screen */
 const WORDS = {
@@ -434,9 +561,18 @@ const WORDS = {
     ["Experiment","A test used to discover new information about a question."],
     ["Energy transfer","When energy travels from one place to another."],
     ["Sound energy","Energy that is in the form of sound that can be heard."]
+  ],
+  "3": [
+    ["Chain reaction machine","A machine that uses a series of energy transfers, such as one domino knocking over a line of dominoes."],
+    ["Engineer","A person who uses science to come up with solutions to problems."],
+    ["Lever","A simple machine, made of a beam that pivots from one point."],
+    ["Stored energy","Energy that is not in use, but is saved inside something, such as batteries or rubber bands."],
+    ["Inclined plane","A simple machine that has a gently sloped surface so it can be used to move objects upwards with less force. Ramps are examples of inclined planes."],
+    ["Wheel and axle","A simple machine used to move objects across a distance using a wheel and axle. Cars have wheels and axles."]
   ]
 };
-const SETS = [["2","Part 2"],["1","Part 1"],["all","Both"]];
+/* newest sheet first; the app always opens on SETS[0] */
+const SETS = [["3","Part 3"],["2","Part 2"],["1","Part 1"],["all","All"]];
 
 const RANKS = [
   {min:0,  name:"Dead Battery",       quip:"Every battery starts out empty. Recharge and run it again."},
@@ -453,7 +589,7 @@ const BOLT = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7
 const app = document.getElementById("app");
 let queue = [], history = [], card = null, done = 0, total = 0, locked = false, confirming = false;
 let streak = 0, bestStreak = 0;
-let set = readSet();
+let set = SETS[0][0];
 
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function shuffled(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
@@ -465,8 +601,6 @@ function topics(){
   return seen.filter(function(t){ return t !== "Put it all together"; }).concat(seen.indexOf("Put it all together") >= 0 ? ["Put it all together"] : []);
 }
 
-function readSet(){ try{ const v=localStorage.getItem("energyCardsSet"); return (v==="1"||v==="2"||v==="all")?v:"2"; }catch(e){ return "2"; } }
-function saveSet(v){ try{ localStorage.setItem("energyCardsSet",v); }catch(e){} }
 function readBest(){ try{ const v=localStorage.getItem("energyCardsBest_"+set); return v?JSON.parse(v):null; }catch(e){ return null; } }
 function saveBest(pct){ try{ const b=readBest(); if(!b||pct>b.pct) localStorage.setItem("energyCardsBest_"+set,JSON.stringify({pct:pct,when:new Date().toLocaleDateString()})); }catch(e){} }
 function rankFor(pct){ let r=RANKS[0]; for(const x of RANKS) if(pct>=x.min) r=x; return r; }
@@ -478,8 +612,15 @@ function home(){
   const ts = topics();
   const ps = pool();
   const mix = "Put it all together";
-  const words = set === "all" ? WORDS["1"].concat(WORDS["2"]) : WORDS[set];
-  const sheet = set === "all" ? "Both study sheets" : "The full Part " + set + " study sheet";
+  let words = WORDS[set];
+  if(set === "all"){
+    /* every sheet's words, skipping repeats like Stored energy */
+    words = [];
+    Object.keys(WORDS).forEach(function(k){ WORDS[k].forEach(function(w){
+      if(!words.some(function(x){ return x[0] === w[0]; })) words.push(w);
+    }); });
+  }
+  const sheet = set === "all" ? "Every study sheet" : "The full Part " + set + " study sheet";
   app.innerHTML =
    '<div class="hero">' +
      '<span class="crest">' + BOLT + '4th grade science</span>' +
@@ -509,7 +650,7 @@ function home(){
      '<footer>Built from the Energy Science Words study sheets</footer>' +
    '</div>';
 
-  app.querySelectorAll("[data-set]").forEach(function(b){ b.addEventListener("click", function(){ set = b.dataset.set; saveSet(set); home(); }); });
+  app.querySelectorAll("[data-set]").forEach(function(b){ b.addEventListener("click", function(){ set = b.dataset.set; home(); }); });
   app.querySelectorAll("[data-mode]").forEach(function(b){ b.addEventListener("click", function(){ begin(b.dataset.mode); }); });
   app.querySelectorAll("[data-topic]").forEach(function(b){ b.addEventListener("click", function(){ begin("topic", b.dataset.topic); }); });
   window.scrollTo(0,0);
