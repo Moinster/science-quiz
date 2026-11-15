@@ -61,7 +61,7 @@ button{font-family:inherit;font-size:17px;cursor:pointer;border:none;background:
 .ladder li:last-child::before{background:var(--spark);box-shadow:0 0 0 4px var(--spark-pale)}
 .ladder .pct{font-size:13px;font-weight:400;color:var(--ink-soft)}
 .best{margin:0 0 6px;font-size:15px;color:var(--ink-soft)}
-.setpick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:4px;margin:0 0 14px;
+.setpick{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;padding:4px;margin:0 0 14px;
   background:var(--card);border:2px solid var(--line);border-radius:14px}
 .setpick button{min-height:44px;border-radius:10px;font-size:15px;font-weight:600;color:var(--ink-soft);padding:0 4px}
 .setpick button.on{background:var(--ink);color:#fff}
@@ -539,10 +539,156 @@ const PART3 = [
   n:"An engineer uses science to solve the problem. A ramp moves things up with less force."}
 ];
 
+const PART4 = [
+ {t:"Electricity", q:"What is electricity?", s:"Electricity is…",
+  o:["A form of energy that can turn on light bulbs","A material that blocks energy","A simple machine with a beam"], a:0,
+  n:"Electricity is a form of energy. It's what turns on the lights!"},
+ {t:"Electricity", q:"Which of these uses electricity?", s:"Something that uses electricity is…",
+  o:["A wooden spoon","A lamp plugged into the wall","A rubber ball"], a:1,
+  n:"The lamp needs electricity to make light."},
+ {t:"Electricity", q:"What do power lines (the tall towers with wires) carry?", s:"Power lines carry…",
+  o:["Water to your sink","Sound to your ears","Electricity to homes and schools"], a:2,
+  n:"Power lines carry electricity a long way, from where it's made to where we use it."},
+ {t:"Electricity", q:"Electricity is a form of what?", s:"Electricity is a form of…",
+  o:["Energy","Gravity","Motion"], a:0,
+  n:"Electricity is energy, just like sound energy and light energy."},
+ {t:"Electricity", q:"You flip on the light switch. What makes the bulb turn on?", s:"When you flip the switch, the bulb turns on because of…",
+  o:["Gravity","Electricity flowing to the bulb","A collision"], a:1,
+  n:"The switch lets electricity flow to the bulb, and the bulb lights up."},
+ {t:"Electricity", q:"Why should you never fly a kite near power lines?", s:"You should never fly a kite near power lines because…",
+  o:["The kite will go too fast","The wind is always too slow there","Electricity from the lines could travel to you"], a:2,
+  n:"Power lines carry a LOT of electricity. Always stay far away from them."},
+
+ {t:"Circuit", q:"What is a circuit?", s:"A circuit is…",
+  o:["A path where electricity can flow","A device that stores energy","A material energy can't go through"], a:0,
+  n:"A circuit is the path electricity follows."},
+ {t:"Circuit", q:"A battery, wires, and a bulb are connected in a loop with no gaps. What happens?", s:"When a battery, wires, and a bulb make a loop with no gaps, the bulb…",
+  o:["Stays dark","Lights up","Turns into a battery"], a:1,
+  n:"No gaps means the path is complete, so electricity flows and the bulb lights."},
+ {t:"Circuit", q:"One wire comes loose and leaves a gap. What happens to the bulb?", s:"When a wire comes loose and leaves a gap, the bulb…",
+  o:["Gets brighter","Stays on forever","Goes out, because electricity can't flow across the gap"], a:2,
+  n:"A gap breaks the path. No path, no electricity, no light."},
+ {t:"Circuit", q:"What shape does a circuit's path need to be for electricity to flow?", s:"For electricity to flow, the circuit's path has to be…",
+  o:["A complete loop with no breaks","A straight line with an open end","Cut into pieces"], a:0,
+  n:"Electricity flows out of the battery, around the loop, and back again."},
+ {t:"Circuit", q:"What does a light switch do to a circuit?", s:"A light switch…",
+  o:["Turns the bulb into a battery","Opens and closes the path so electricity can stop or flow","Makes sound energy"], a:1,
+  n:"Switch ON closes the gap so electricity flows. Switch OFF opens a gap and the light goes out."},
+ {t:"Circuit", q:"What do you need to build a circuit that lights a bulb?", s:"To build a circuit that lights a bulb, you need…",
+  o:["A rubber band, a ramp, and a ball","Only a light bulb","A battery, wires, and a bulb"], a:2,
+  n:"The battery gives the energy, the wires make the path, and the bulb lights up."},
+
+ {t:"Battery", q:"What is a battery?", s:"A battery is…",
+  o:["A path where electricity flows","A device that stores electrical energy","A material that blocks electricity"], a:1,
+  n:"A battery stores electrical energy until you need it."},
+ {t:"Battery", q:"What kind of energy is saved inside a battery?", s:"The energy saved inside a battery is…",
+  o:["Stored electrical energy","Sound energy","Height energy"], a:0,
+  n:"A battery holds stored energy, just like you learned in Part 1 and Part 3!"},
+ {t:"Battery", q:"In a flashlight circuit, what job does the battery do?", s:"In a flashlight circuit, the battery…",
+  o:["Blocks the electricity","Makes the light bulb heavier","Gives the electrical energy that lights the bulb"], a:2,
+  n:"The battery is where the energy comes from."},
+ {t:"Battery", q:"A flashlight's circuit is complete, but it won't turn on. What is the most likely problem?", s:"If a complete flashlight circuit won't light, the most likely problem is…",
+  o:["The battery's stored energy is used up","The flashlight is too clean","There is too much light in the room"], a:0,
+  n:"A dead battery has no stored energy left to give. Time for a new one!"},
+ {t:"Battery", q:"Which of these runs on a battery?", s:"Something that runs on a battery is…",
+  o:["A seesaw","A TV remote","A wooden chair"], a:1,
+  n:"Open up a remote and you'll find batteries inside."},
+
+ {t:"Conductor", q:"What is a conductor?", s:"A conductor is…",
+  o:["A material that electrical energy can travel through","A material that electrical energy cannot go through","A device that stores energy"], a:0,
+  n:"Conductors let electricity travel through them."},
+ {t:"Conductor", q:"Which of these is a conductor?", s:"An example of a conductor is…",
+  o:["A rubber band","A metal paper clip","A plastic spoon"], a:1,
+  n:"Metal is a conductor. Electricity can travel through the paper clip."},
+ {t:"Conductor", q:"What are most good conductors made of?", s:"Most good conductors are made of…",
+  o:["Wood","Rubber","Metal"], a:2,
+  n:"Metals like copper, aluminum, and iron are good conductors."},
+ {t:"Conductor", q:"Why are the wires in a circuit made of metal like copper?", s:"Wires are made of metal like copper because…",
+  o:["Metal is a conductor, so electricity can travel through it","Metal is an insulator","Metal makes sound energy"], a:0,
+  n:"The wire has to let electricity travel through it, so it must be a conductor."},
+ {t:"Conductor", q:"You put a metal key across a gap in a circuit and the bulb lights up. What does that tell you?", s:"If the bulb lights up when a metal key fills the gap, the key is…",
+  o:["An insulator","A conductor","A battery"], a:1,
+  n:"The electricity traveled through the key, so the key is a conductor."},
+ {t:"Conductor", q:"You test a coin, a wooden stick, and some aluminum foil in a circuit. Which ones light the bulb?", s:"The things that light the bulb are…",
+  o:["Only the wooden stick","None of them","The coin and the foil"], a:2,
+  n:"The coin and foil are metal, so they are conductors. Wood is not."},
+
+ {t:"Insulator", q:"What is an insulator?", s:"An insulator is…",
+  o:["A material that electricity travels through easily","A material that electrical energy can not go through","A path where electricity can flow"], a:1,
+  n:"An insulator blocks electricity."},
+ {t:"Insulator", q:"Which of these is an insulator?", s:"An example of an insulator is…",
+  o:["Rubber","A copper wire","A metal spoon"], a:0,
+  n:"Electricity can't go through rubber."},
+ {t:"Insulator", q:"Why are electrical wires covered in plastic or rubber?", s:"Wires are covered in plastic or rubber because…",
+  o:["It helps electricity travel faster","It makes the wire shiny","Plastic and rubber are insulators that keep the electricity inside and keep you safe"], a:2,
+  n:"The metal inside carries the electricity. The insulator outside keeps it from getting to you."},
+ {t:"Insulator", q:"You put a wooden craft stick across a gap in a circuit. The bulb stays dark. Why?", s:"The bulb stays dark because the wooden stick is…",
+  o:["A conductor","An insulator","A battery"], a:1,
+  n:"Wood is an insulator, so electricity can't get across the gap."},
+ {t:"Insulator", q:"Which group is ALL insulators?", s:"A group that is all insulators is…",
+  o:["Plastic, rubber, and wood","Copper, foil, and a coin","A nail, a key, and a paper clip"], a:0,
+  n:"Plastic, rubber, and wood all block electricity. The others are metal conductors."},
+ {t:"Insulator", q:"Conductor or insulator: which one STOPS electricity?", s:"The one that stops electricity is…",
+  o:["A conductor","A circuit","An insulator"], a:2,
+  n:"Conductor lets it go. Insulator stops it."},
+
+ {t:"Light energy", q:"What is light energy?", s:"Light energy is…",
+  o:["Energy in the form of light that you can see","Energy you can hear","Energy that pulls things down"], a:0,
+  n:"If you can see it shining, it's light energy."},
+ {t:"Light energy", q:"How do you know light energy is there?", s:"You know light energy is there because you can…",
+  o:["Hear it","See it","Smell it"], a:1,
+  n:"You SEE light energy. You HEAR sound energy."},
+ {t:"Light energy", q:"A light bulb changes electrical energy into what?", s:"A light bulb changes electrical energy into…",
+  o:["Sound energy","Height energy","Light energy"], a:2,
+  n:"Electricity goes in, light comes out. (The bulb gets warm too!)"},
+ {t:"Light energy", q:"What is Earth's biggest source of light energy?", s:"Earth's biggest source of light energy is…",
+  o:["The Sun","The Moon","A flashlight"], a:0,
+  n:"The Sun! The Moon doesn't make its own light. It reflects light from the Sun."},
+ {t:"Light energy", q:"Which of these gives off light energy?", s:"Something that gives off light energy is…",
+  o:["A rock in the dark","A glowing flashlight","A rubber band"], a:1,
+  n:"The flashlight shines light you can see."},
+
+ {t:"Invent", q:"What does invent mean?", s:"To invent means…",
+  o:["To create something new, or try a new way of doing something","To copy someone else's answer","To stop something from working"], a:0,
+  n:"Inventors make new things, or find new ways to do things."},
+ {t:"Invent", q:"Which of these is inventing?", s:"An example of inventing is…",
+  o:["Reading the same book again","Building a new kind of flashlight no one has made before","Sitting still and waiting"], a:1,
+  n:"Creating something new is inventing."},
+ {t:"Invent", q:"Which Part 3 word means a person who uses science to come up with solutions to problems?", s:"Someone who uses science to come up with solutions to problems is…",
+  o:["A conductor","An insulator","An engineer"], a:2,
+  n:"Engineers often invent new things to solve problems."},
+ {t:"Invent", q:"Your flashlight keeps rolling off the table, so you design a new holder to keep it still. What did you do?", s:"Designing a new holder to keep your flashlight still means you…",
+  o:["Invented something","Made an insulator","Broke a circuit"], a:0,
+  n:"You created something new to solve a problem. That's inventing!"},
+ {t:"Invent", q:"You find a brand new way to do something that people already do. Is that inventing?", s:"Trying a new way of doing something is…",
+  o:["Not inventing, because the thing already exists","Also inventing","A kind of conductor"], a:1,
+  n:"The study sheet says inventing can be making something new OR trying a new way of doing something."},
+
+ {t:"Put it all together", q:"A battery, a metal wire, and a bulb make a complete loop and the bulb shines. Which science words fit?", s:"In this setup, you can find…",
+  o:["A battery, a conductor, a circuit, and light energy","Only an insulator","Gravity and a lever"], a:0,
+  n:"Battery stores the energy, the metal wire conducts it, the loop is the circuit, and the bulb makes light."},
+ {t:"Put it all together", q:"In a flashlight, what is the order the energy travels?", s:"In a flashlight, the energy goes from…",
+  o:["The light, to the battery, to the wire","The battery, to the wire, to the bulb, to light you can see","The bulb, to the rubber, to the battery"], a:1,
+  n:"Stored energy in the battery travels through the wire and becomes light energy in the bulb."},
+ {t:"Put it all together", q:"You replace the metal wire in a circuit with a rubber band. What happens?", s:"When a rubber band replaces the metal wire, the bulb…",
+  o:["Gets brighter, because rubber is a conductor","Stays lit the same","Goes dark, because rubber is an insulator"], a:2,
+  n:"Rubber blocks electricity, so the path is broken."},
+ {t:"Put it all together", q:"An electrical cord has copper wire inside and rubber on the outside. What are the two parts?", s:"In an electrical cord, the copper inside and the rubber outside are…",
+  o:["A conductor inside and an insulator outside","Two insulators","Two batteries"], a:0,
+  n:"Copper carries the electricity. Rubber keeps it safely inside."},
+ {t:"Put it all together", q:"You put different objects in the gap of a circuit to see which ones light the bulb. What are you sorting them into?", s:"Testing objects in the gap sorts them into…",
+  o:["Levers and ramps","Conductors and insulators","Sounds and lights"], a:1,
+  n:"Bulb lights: conductor. Bulb stays dark: insulator. And it's an experiment, too!"},
+ {t:"Put it all together", q:"Energy travels from a battery, through the wires, to a bulb. Which Part 2 word describes energy traveling from one place to another?", s:"Energy traveling from the battery to the bulb is…",
+  o:["A collision","Gravity","Energy transfer"], a:2,
+  n:"Energy transfer! The energy moves from the battery all the way to the bulb."}
+];
+
 /* p = which study sheet the card came from */
 const QUESTIONS = PART1.map(function(q){ return Object.assign({p:"1"}, q); })
   .concat(PART2.map(function(q){ return Object.assign({p:"2"}, q); }))
-  .concat(PART3.map(function(q){ return Object.assign({p:"3"}, q); }));
+  .concat(PART3.map(function(q){ return Object.assign({p:"3"}, q); }))
+  .concat(PART4.map(function(q){ return Object.assign({p:"4"}, q); }));
 
 /* the words from each study sheet, shown on the home screen */
 const WORDS = {
@@ -569,10 +715,19 @@ const WORDS = {
     ["Stored energy","Energy that is not in use, but is saved inside something, such as batteries or rubber bands."],
     ["Inclined plane","A simple machine that has a gently sloped surface so it can be used to move objects upwards with less force. Ramps are examples of inclined planes."],
     ["Wheel and axle","A simple machine used to move objects across a distance using a wheel and axle. Cars have wheels and axles."]
+  ],
+  "4": [
+    ["Invent","To create something new, or to try a new way of doing something."],
+    ["Circuit","A path where electricity can flow."],
+    ["Conductor","A material that electrical energy can travel through."],
+    ["Insulator","A material that electrical energy can not go through."],
+    ["Light energy","Energy that is in the form of light that you can see."],
+    ["Battery","A device to store electrical energy."],
+    ["Electricity","A form of energy, such as something that will turn on light bulbs."]
   ]
 };
 /* newest sheet first; the app always opens on SETS[0] */
-const SETS = [["3","Part 3"],["2","Part 2"],["1","Part 1"],["all","All"]];
+const SETS = [["4","Part 4"],["3","Part 3"],["2","Part 2"],["1","Part 1"],["all","All"]];
 
 const RANKS = [
   {min:0,  name:"Dead Battery",       quip:"Every battery starts out empty. Recharge and run it again."},
@@ -643,7 +798,7 @@ function home(){
          return '<button data-topic="' + esc(t) + '"' + (t === mix ? ' class="wide"' : '') + '>' + esc(t) + '<span>' + sub + '</span></button>';
        }).join("") +
      '</div>' +
-     '<h3>The ' + (words.length === 6 ? "six" : words.length) + ' science words</h3>' +
+     '<h3>The ' + ({6:"six",7:"seven"}[words.length] || words.length) + ' science words</h3>' +
      '<div class="words">' + words.map(function(w){ return '<div class="word"><b>' + esc(w[0]) + ':</b> ' + esc(w[1]) + '</div>'; }).join("") + '</div>' +
      '<h3>How you rank</h3>' +
      '<ul class="ladder">' + RANKS.map(function(r){ return '<li>' + esc(r.name) + ' <span class="pct">' + (r.min ? r.min + "%" : "under 40%") + '</span></li>'; }).join("") + '</ul>' +
